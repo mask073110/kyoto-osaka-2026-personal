@@ -547,10 +547,11 @@ async function recognizeAddPlaceAI(sharedUrl){
     if(quickName){
       showRecognitionResult({name:quickName,category,address:"",hours:"",confidence:70,city:"",area:"",localName:quickName,searchQuery:quickName,stay:"10–30分鐘",intro:"Google Maps 連結已快速加入；AI 詳細資料逾時，可稍後補充。",recommend:"",candidates:[]},err?.name==="AbortError"?"AI timeout":String(err));
     }else{
-      panel.innerHTML='<div class="add-day">DAY '+(day+1)+' · '+DAYS[day].date+'</div><div class="analyze-state"><div class="analyze-icon">!</div><h3>辨識逾時</h3><p>這個分享連結目前無法快速取得店名，但頁面不會繼續卡住。</p><button class="btn primary" onclick="closeDetail();openAddPlace(window.__addRouteIndex)">重新貼上連結</button></div>';
+      panel.innerHTML='<div class="add-day">DAY '+(day+1)+' · '+DAYS[day].date+'</div><div class="analyze-state"><div class="analyze-icon">!</div><h3>自動辨識失敗</h3><p>這個 Google Maps 分享連結目前無法取得地點名稱。直接輸入名稱即可建立，不必重新貼連結。</p><input id="fallbackPlaceName" class="field" type="text" autocomplete="off" placeholder="例如：新竹轉運站"><button class="btn primary" onclick="createFallbackPlace()">使用名稱建立地點</button><button class="btn" style="margin-top:8px" onclick="closeDetail();openAddPlace(window.__addRouteIndex)">返回重新貼上</button></div>';
     }
   }
 }
+function createFallbackPlace(){let n=(document.getElementById("fallbackPlaceName")?.value||"").trim(),category=document.getElementById("addType")?.value||"景點";if(!n){alert("請輸入地點名稱");return}window.__manualAddPlaceName=n;showRecognitionResult({name:n,category,address:"",hours:"",confidence:100,city:"",area:"",localName:n,searchQuery:n,stay:"10–30分鐘",intro:"手動確認地點名稱；詳細資料可稍後補充。",recommend:"",candidates:[]},"manual-fallback")}
 function parseMapScreenshot(raw,category){
   let lines=raw.split(/\n+/).map(x=>x.replace(/\s+/g," ").trim()).filter(x=>x.length>1);
   let chrome=/ChatGPT|5G|LTE|Safari|google\.com|搜尋或輸入|Search or enter|返回|戻る|共有|分享|保存|儲存|造訪|Visit|Share|Save|AI 模式|購物|新聞|短片|全部|地圖|圖片|^\d{1,2}:\d{2}$/i;
