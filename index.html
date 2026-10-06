@@ -216,11 +216,13 @@ body{font-size:16px}.top{font-size:13px}.eyebrow{font-size:12px}.hero p{font-siz
 .route-type-chip{cursor:pointer!important;font-family:inherit!important}
 button.route-type-chip{-webkit-appearance:none;appearance:none}
 .route-type-chip:active{transform:scale(.97)}
-</style><style id="ios-bottom-nav-v4">
+</style><style id="ios-bottom-nav-v5">
 @media(max-width:430px){
-  .nav{min-height:58px!important;height:58px!important;padding:0 0 env(safe-area-inset-bottom,0px)!important;box-sizing:content-box!important;align-items:start!important}
-  .nav button{height:58px!important;padding:5px 2px 4px!important;align-self:start!important}
+  :root{--home-safe:env(safe-area-inset-bottom,0px)}
+  .nav{min-height:62px!important;height:62px!important;bottom:0!important;padding:0 0 calc(var(--home-safe) + 8px)!important;box-sizing:content-box!important;align-items:start!important}
+  .nav button{height:58px!important;padding:3px 2px 7px!important;align-self:start!important;transform:translateY(-4px)!important}
   .nav i{font-size:17px!important;margin-bottom:1px!important;line-height:22px!important}
+  .content{padding-bottom:calc(98px + var(--home-safe))!important}
 }
 </style></head><body><div id="identityGate"></div><div id="app" class="app viewport"><main class="fallback"><h1>京都・大阪 秋旅</h1><p>2026.11.19 — 11.24｜8 人攝影旅行</p><p>行程介面載入中。若互動程式發生錯誤，此基本資訊仍會保留，不再顯示全空白頁。</p></main></div>
 <script>
