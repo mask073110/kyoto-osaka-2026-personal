@@ -224,7 +224,11 @@ button.route-type-chip{-webkit-appearance:none;appearance:none}
   .nav i{font-size:17px!important;margin-bottom:1px!important;line-height:22px!important}
   .content{padding-bottom:calc(98px + var(--home-safe))!important}
 }
-</style></head><body><div id="identityGate"></div><div id="app" class="app viewport"><main class="fallback"><h1>京都・大阪 秋旅</h1><p>2026.11.19 — 11.24｜8 人攝影旅行</p><p>行程介面載入中。若互動程式發生錯誤，此基本資訊仍會保留，不再顯示全空白頁。</p></main></div>
+</style><style id="ios-form-zoom-fix-v1">
+@media(max-width:430px){
+  #detail input,#detail select,#detail textarea,#detail .field,#detail .add-input,#detail .add-textarea{font-size:16px!important}
+}
+</style><style id="recognition-warning-v1">.recognition-warn{text-align:center;font-weight:800;color:#9b3e31;margin:8px 0 12px}</style></head><body><div id="identityGate"></div><div id="app" class="app viewport"><main class="fallback"><h1>京都・大阪 秋旅</h1><p>2026.11.19 — 11.24｜8 人攝影旅行</p><p>行程介面載入中。若互動程式發生錯誤，此基本資訊仍會保留，不再顯示全空白頁。</p></main></div>
 <script>
 (function(){try{const k="personalRecovery5a07169d_v1";if(!localStorage.getItem(k)){for(let i=0;i<6;i++){localStorage.removeItem("hiddenFoodNearDay"+i);localStorage.removeItem("customFoodNearDay"+i);}localStorage.setItem(k,"1");}}catch(e){console.warn("recovery reset skipped",e)}})();
 function currentMember(){return localStorage.getItem("tripMember")||""}
@@ -546,7 +550,7 @@ async function recognizeAddPlaceAI(sharedUrl){
   }catch(err){
     clearTimeout(timer);console.warn("place recognition fallback",err);
     if(quickName){
-      showRecognitionResult({name:quickName,category,address:"",hours:"",confidence:70,city:"",area:"",localName:quickName,searchQuery:quickName,stay:"10–30分鐘",intro:"Google Maps 連結已快速加入；AI 詳細資料逾時，可稍後補充。",recommend:"",candidates:[]},err?.name==="AbortError"?"AI timeout":String(err));
+      showRecognitionEditor({name:quickName,category,address:"",hours:"",rating:"",stay:"",intro:"",recommend:"",searchQuery:quickName},err?.name==="AbortError"?"搜尋逾時":"目前無法取得線上地點資料");
     }else{
       panel.innerHTML='<div class="add-day">DAY '+(day+1)+' · '+DAYS[day].date+'</div><div class="analyze-state"><div class="analyze-icon">!</div><h3>自動辨識失敗</h3><p>這個 Google Maps 分享連結目前無法取得地點名稱。直接輸入名稱即可建立，不必重新貼連結。</p><input id="fallbackPlaceName" class="field" type="text" autocomplete="off" placeholder="例如：新竹轉運站"><button class="btn primary" onclick="createFallbackPlace()">使用名稱建立地點</button><button class="btn" style="margin-top:8px" onclick="closeDetail();openAddPlace(window.__addRouteIndex)">返回重新貼上</button></div>';
     }
@@ -580,6 +584,26 @@ function parseMapScreenshot(raw,category){
   let hours=clean.find(x=>/(營業|営業|開店|閉店|休業|休息).{0,30}\d{1,2}[:：]\d{2}/.test(x))||"";
   let confidence=best?Math.min(99,best.score+(address?3:0)+(rating?2:0)):20;
   return {name:best?best.name:"未能可靠辨識名稱",category,rating,address,hours,raw,confidence,candidates}
+}
+function showRecognitionEditor(r,reason){
+  let panel=document.querySelector("#detail .panel");if(!panel)return;
+  let ri=Number.isInteger(window.__addRouteIndex)?window.__addRouteIndex:null,ev=activeEvents(DAYS[day]),target=ri!==null&&ev[ri]?ev[ri][1]:"DAY "+(day+1);
+  window.__ocrPlace=r;
+  panel.innerHTML='<div class="add-day">加入節點｜'+esc(target)+'</div><div class="recognition-warn">地點名稱已確認，但詳細資料尚未取得</div><div class="status">'+esc(reason)+'。請補充或修正以下內容後再加入，不再用相同預設資料冒充辨識結果。</div>'+
+  '<label class="small">名稱</label><input id="ocrName" class="add-input" value="'+attr(r.name||"")+'">'+
+  '<label class="small">類型</label><select id="ocrCategory" class="field"><option>景點</option><option>美食</option><option>購物</option><option>藥妝</option><option>交通</option><option>澡堂</option><option>住宿</option></select>'+
+  '<label class="small">地址／位置</label><input id="ocrLocation" class="field" value="'+attr(r.address||"")+'" placeholder="例如：京都府京都市…">'+
+  '<label class="small">營業／開放時間</label><input id="ocrHours" class="field" value="'+attr(r.hours||"")+'" placeholder="例如：08:00–17:00">'+
+  '<label class="small">評分／推薦</label><input id="ocrRecommend" class="field" value="'+attr(r.recommend||"")+'" placeholder="例如：寺院、澡堂、拉麵">'+
+  '<label class="small">建議停留</label><input id="ocrStay" class="field" value="'+attr(r.stay||"")+'" placeholder="例如：30–60分鐘">'+
+  '<label class="small">備註</label><textarea id="ocrIntro" class="add-textarea" placeholder="此地點的特色或注意事項">'+esc(r.intro||"")+'</textarea>'+
+  '<button class="btn primary add-save" onclick="confirmRecognitionEditor()">確認加入</button><button class="btn" onclick="closeDetail();openAddPlace(window.__addRouteIndex)">返回搜尋</button>';
+  let s=document.getElementById("ocrCategory");if(s)s.value=r.category||"景點"
+}
+function confirmRecognitionEditor(){
+  let r=window.__ocrPlace||{},name=(document.getElementById("ocrName")?.value||"").trim();if(!name){alert("請確認地點名稱");return}
+  saveCustomFoodNear({name,category:document.getElementById("ocrCategory")?.value||r.category||"景點",intro:(document.getElementById("ocrIntro")?.value||"").trim(),recommend:(document.getElementById("ocrRecommend")?.value||"").trim(),location:(document.getElementById("ocrLocation")?.value||"").trim()||"位置待補",stay:(document.getElementById("ocrStay")?.value||"").trim()||"停留時間待補",hours:(document.getElementById("ocrHours")?.value||"").trim(),rating:r.rating||"",searchQuery:r.searchQuery||name,localName:r.localName||"",ocr:false});
+  window.__ocrPlace=null;window.__addRouteIndex=null;closeDetail()
 }
 function showRecognitionResult(r,raw){
   let panel=document.querySelector("#detail .panel");if(!panel)return;
