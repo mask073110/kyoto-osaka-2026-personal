@@ -431,13 +431,25 @@ function submitSharedPlace(){let url=(document.getElementById("addSharedUrl")?.v
 function pickAddType(el){document.querySelectorAll(".add-type").forEach(x=>x.classList.remove("active"));el.classList.add("active");document.getElementById("addType").value=el.dataset.v}
 async function recognizeAddPlaceAI(sharedUrl){
   let panel=document.querySelector("#detail .panel"),category=document.getElementById("addType")?.value||"景點";if(!panel)return;
-  panel.innerHTML='<div class="add-day">DAY '+(day+1)+' · '+DAYS[day].date+'</div><div class="analyze-state"><div class="analyze-icon">✦</div><h3>AI 正在確認地點</h3><p id="aiProgress">解析 Google Maps 分享連結…</p><div class="ocrbar"><i id="ocrBarFill" style="width:65%"></i></div><div class="status">確認地點後會整理成繁體中文名稱、位置、營業與建議停留資訊。</div></div>';
+  let quickName=urlCandidateName(sharedUrl)||"";
+  panel.innerHTML='<div class="add-day">DAY '+(day+1)+' · '+DAYS[day].date+'</div><div class="analyze-state"><div class="analyze-icon">✦</div><h3>正在確認地點</h3><p id="aiProgress">快速解析 Google Maps 連結…</p><div class="ocrbar"><i id="ocrBarFill" style="width:35%"></i></div><div class="status">最多等待 10 秒；逾時仍可先加入，不會卡在辨識畫面。</div><div id="quickAddActions"></div></div>';
+  let actions=document.getElementById("quickAddActions");
+  if(quickName&&actions)actions.innerHTML='<button class="btn" onclick="showRecognitionResult({name:'+JSON.stringify(quickName)+',category:'+JSON.stringify(category)+',address:\'\',hours:\'\',confidence:70,stay:\'10–30分鐘\',intro:\'Google Maps 連結快速加入；詳細資料可稍後補充。\',recommend:\'\',candidates:[]},\'quick\')">先加入「'+esc(quickName)+'」</button>';
+  const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),10000);
   try{
-    let fill=document.getElementById("ocrBarFill");
-    let rr=await fetch("https://kyoto-osaka-2026-beta.vercel.app/api/recognize-place",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({category,sharedUrl})});
+    let fill=document.getElementById("ocrBarFill");if(fill)fill.style.width="60%";
+    let rr=await fetch("https://kyoto-osaka-2026-beta.vercel.app/api/recognize-place",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({category,sharedUrl}),signal:ctl.signal});
+    clearTimeout(timer);
     let data=await rr.json();if(!rr.ok)throw new Error(data?.detail||data?.error||("HTTP "+rr.status));if(fill)fill.style.width="100%";
-    showRecognitionResult({name:data.name||data.localName||"未能可靠辨識名稱",category:data.category||category,rating:data.rating||"",address:data.address||data.city||"",hours:data.hours||"",confidence:data.confidence||0,city:data.city||"",area:data.area||"",localName:data.localName||"",searchQuery:data.searchQuery||"",stay:data.stay||"",intro:data.intro||"",recommend:data.recommend||"",candidates:[]},JSON.stringify(data,null,2));
-  }catch(err){console.error(err);panel.innerHTML='<div class="add-day">DAY '+(day+1)+' · '+DAYS[day].date+'</div><div class="analyze-state"><div class="analyze-icon">!</div><h3>AI 辨識失敗</h3><p>目前無法完成分享連結辨識</p><div class="status">'+esc(String(err.message||err))+'</div><button class="btn primary" onclick="closeDetail();openAddPlace()">重新貼上連結</button></div>'}
+    showRecognitionResult({name:data.name||data.localName||quickName||"未能可靠辨識名稱",category:data.category||category,rating:data.rating||"",address:data.address||data.city||"",hours:data.hours||"",confidence:data.confidence||0,city:data.city||"",area:data.area||"",localName:data.localName||"",searchQuery:data.searchQuery||"",stay:data.stay||"",intro:data.intro||"",recommend:data.recommend||"",candidates:[]},JSON.stringify(data,null,2));
+  }catch(err){
+    clearTimeout(timer);console.warn("place recognition fallback",err);
+    if(quickName){
+      showRecognitionResult({name:quickName,category,address:"",hours:"",confidence:70,city:"",area:"",localName:quickName,searchQuery:quickName,stay:"10–30分鐘",intro:"Google Maps 連結已快速加入；AI 詳細資料逾時，可稍後補充。",recommend:"",candidates:[]},err?.name==="AbortError"?"AI timeout":String(err));
+    }else{
+      panel.innerHTML='<div class="add-day">DAY '+(day+1)+' · '+DAYS[day].date+'</div><div class="analyze-state"><div class="analyze-icon">!</div><h3>辨識逾時</h3><p>這個分享連結目前無法快速取得店名，但頁面不會繼續卡住。</p><button class="btn primary" onclick="closeDetail();openAddPlace(window.__addRouteIndex)">重新貼上連結</button></div>';
+    }
+  }
 }
 function parseMapScreenshot(raw,category){
   let lines=raw.split(/\n+/).map(x=>x.replace(/\s+/g," ").trim()).filter(x=>x.length>1);
