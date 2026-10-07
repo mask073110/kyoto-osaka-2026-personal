@@ -328,6 +328,18 @@ Object.assign(FOOD_DETAIL,{
 "おにぎりごりちゃん 新世界店｜鮭魚籽飯糰":{video:true,intro:"影片10:38的鮭魚籽飯糰候選。2026/9仍有實際到訪紀錄，菜單有筋子與鮭＋筋子等大量配料飯糰。",recommend:"鮭＋筋子／筋子おにぎり",price:"外送公開價：筋子 ¥969、鮭＋筋子 ¥1,108；店頭價可能較低，現場確認",hours:"近期資料約 11:00–20:00｜售完可能提早結束",group:"8人｜可內用也可外帶；飯糰體積大，適合分流購買",route:"DAY5 新世界・ジャンジャン横丁｜恵美須東3-4-16",img:""},
 "ぱん士郎 なんば道頓堀店｜熊貓白可頌":{video:true,intro:"影片02:18的扁熊貓白可頌。2026/6到訪紀錄明確描述為扁平可頌加白巧克力熊貓臉，DAY5難波→道頓堀直接順路。",recommend:"パンダのフラットクロワッサン｜白巧克力熊貓造型",price:"價格｜現場確認；不引用未核實價格",hours:"營業時間｜出發前依店家最新公告確認",group:"8人｜外帶型甜點，適合分流購買；不需安排座位",route:"DAY5 なんば→道頓堀步行主線｜道頓堀橋附近",img:""}
 });
+/* IG screenshots 2026-10-07: reassigned by the actual trip route, not the IG DAY labels. */
+(function importInstagramPlaces(){
+  const add=(di,names)=>{DAYS[di].near=[...new Set([...(DAYS[di].near||[]),...names])]};
+  add(0,["ABOUT US COFFEE","御金神社","Kurasu Ebisugawa","APFR KYOTO","新風館","HOHO HOJICHA","寿しのむさし","Okaffe ROASTING PARK","平等寺（因幡堂）","餃子處 亮昌 高辻本店","錦市場","Koe donuts","京都御握丸 Onimaru","mina Kyoto","星巴克 京都 BAL 店","Menbou Miyoshi"]);
+  add(1,["Nittodo & Kyoto Cafe","Peter Rabbit Shop","伊藤久右衛門 清水周邊","月下美人","SNOOPY Chocolat 京都・清水坂","My Only Fragrance 清水","東天王 岡崎神社","藍瓶 京都店","八坂神社","Miffy 點心堂","GION GOZU","京都花見小路","Ramen Nishiki"]);
+  const pending=[
+    ["京都着物 MOCOMOCO","嵐山｜目前正式行程未排入"],
+    ["竹林小徑","嵐山｜目前正式行程未排入"],["Yojiya Cafe 嵐山","嵐山｜目前正式行程未排入"],["古都芋本舖","嵐山｜目前正式行程未排入"],["SNOOPY Cha-Ya 嵐山","嵐山｜目前正式行程未排入"],["嵐山拉拉熊茶房","嵐山｜目前正式行程未排入"],["渡月橋","嵐山｜目前正式行程未排入"],["米菲櫻花廚房 嵐山","嵐山｜目前正式行程未排入"],["京Baum 嵐山","嵐山｜目前正式行程未排入"],["御髮神社","嵐山｜目前正式行程未排入"],["野宮神社","嵐山｜目前正式行程未排入"],["嵐山小火車","嵐山｜目前正式行程未排入"],["車折神社","嵐山｜目前正式行程未排入"],
+    ["通圓本店","宇治｜目前正式行程未排入"],["茶房 櫟","宇治｜目前正式行程未排入"],["宇治上神社／宇治神社","宇治｜目前正式行程未排入"],["福寿園 宇治茶工房","宇治｜目前正式行程未排入"],["宇治公園","宇治｜目前正式行程未排入"],["平等院","宇治｜目前正式行程未排入"],["丸吉 Marukichi","宇治｜目前正式行程未排入"],["Kyoto Uji TakoQ","宇治｜目前正式行程未排入"],["伊藤久右衛門 宇治本店","宇治｜目前正式行程未排入"],["Matcha Republic","宇治｜目前正式行程未排入"],["辻利 宇治本店","宇治｜目前正式行程未排入"]
+  ];
+  try{const key="igScreenshotsImported_20261007_v1";if(!localStorage.getItem(key)){let a=JSON.parse(localStorage.getItem("tripPendingPlaces")||"[]");if(!Array.isArray(a))a=[];const norm=s=>String(s||"").normalize("NFKC").toLowerCase().replace(/[\s・･·.,，。()（）\-_/]/g,"");for(const [name,location] of pending){if(!a.some(x=>norm(x.name)===norm(name)))a.push({name,category:"景點／周邊",location,reason:"待安排",geo:null,createdAt:Date.now()})}localStorage.setItem("tripPendingPlaces",JSON.stringify(a));localStorage.setItem(key,"1")}}catch(e){console.warn("IG pending import skipped",e)}
+})();
 const NEAR_META={"3COINS 京都寺町店":["🔥 3COINS 熱門推薦","DAY1 寺町主線","10–20分"],"LE LABO Kyoto Machiya":["香氛／選物","DAY1 河原町周邊","10–20分"],"寺町・新京極商店街":["商店街／藥妝／伴手禮","DAY1 晚間自由區","30–60分"],"Koto no Iroha 祇園店":["古都のいろひ 祇園店｜和風雜貨・金襴袋物・伴手禮","DAY2 祇園路線｜京都市東山區清井町492-4｜11:00–19:00・週三休","10–20分"],"AKANES 清水周邊":["💍 硬幣戒指候選","DAY2 清水周邊","依現場"],"弘法市攤位":["🏮 市集／在地物件","DAY3 東寺固定節點","30–60分"],"伏見稻荷參道":["🎁 伴手禮／小吃","DAY3 伏見稻荷","15–30分"],"杯麵博物館紀念品":["🎁 館內採買","DAY4 固定節點","10–20分"],"大阪飯店周邊採買":["💊🛒 藥妝／超市","DAY4 入住後","30–45分"],"TAPTAP Lab":["💍 硬幣戒指候選","DAY5 新世界","依現場"],"HISEKI":["💍 硬幣戒指候選","DAY5 心齋橋","依現場"],"日本橋動漫・扭蛋":["🎰 動漫／扭蛋","DAY5 日本橋主線","30–60分"],"KIX 最後採買・伴手禮":["🎁 機場最後採買","DAY6 報到後","依登機時間"]};
 const SENTO_META={
 "五香湯":["♨️ 京都飯店最近首選｜傳統銭湯","下京区柿本町590-12｜14:30–00:30；週日07:00–24:00｜週一休","60–90分","Comfort Hotel ERA 京都堀川五条附近；飯店官方住宿方案標示步行約5分鐘。"],
