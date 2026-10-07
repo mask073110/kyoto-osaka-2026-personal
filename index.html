@@ -575,26 +575,32 @@ function showRecognitionEditor(r,reason){
   '<label class="small">營業／開放時間</label><input id="ocrHours" class="field" value="'+attr(r.hours||"")+'" placeholder="例如：08:00–17:00">'+
   '<label class="small">評分／推薦</label><input id="ocrRecommend" class="field" value="'+attr(r.recommend||"")+'" placeholder="例如：寺院、澡堂、拉麵">'+
   '<label class="small">建議停留</label><input id="ocrStay" class="field" value="'+attr(r.stay||"")+'" placeholder="例如：30–60分鐘">'+
-  '<label class="small">備註</label><textarea id="ocrIntro" class="add-textarea" placeholder="此地點的特色或注意事項">'+esc(r.intro||"")+'</textarea>'+
+  '<label class="small">備註</label><textarea id="ocrIntro" class="add-textarea" placeholder="此地點的特色或注意事項">'+esc(r.intro||"")+'</textarea>'+ '<label class="small">🛍 想買的東西</label><textarea id="ocrWanted" class="add-textarea" rows="3" placeholder="例如：御守、七味粉、限定伴手禮；可用換行或逗號分開"></textarea><div class="status" style="margin:6px 0 12px">有填寫的品項會同步加入待買清單，並記錄來源景點。</div>'+
   '<button class="btn primary add-save" onclick="confirmRecognitionEditor()">確認加入</button><button class="btn" onclick="closeDetail();openAddPlace(window.__addRouteIndex)">返回搜尋</button>';
   let s=document.getElementById("ocrCategory");if(s)s.value=r.category||"景點"
 }
-function confirmRecognitionEditor(){
+function parsePlaceWanted(raw){return [...new Set(String(raw||"").split(/[\n,，、;；]+/).map(x=>x.trim()).filter(Boolean))]}
+async function syncPlaceWanted(place,raw,tripDay){let names=parsePlaceWanted(raw);if(!names.length)return;for(const name of names){let item={id:Date.now()+"-"+Math.random().toString(36).slice(2,8),name,category:"",place,price:"",qty:"",note:"來源景點："+place,photo:"",photoPublicId:"",tripDay,done:false,uploadedBy:currentMember(),uploadedAt:new Date().toISOString(),likes:[],comments:[]};await mutateShopping({op:"add",item})}}
+async function confirmRecognitionEditor(){
   let r=window.__ocrPlace||{},name=(document.getElementById("ocrName")?.value||"").trim();if(!name){alert("請確認地點名稱");return}
-  saveCustomFoodNear({name,category:document.getElementById("ocrCategory")?.value||r.category||"景點",intro:(document.getElementById("ocrIntro")?.value||"").trim(),recommend:(document.getElementById("ocrRecommend")?.value||"").trim(),location:(document.getElementById("ocrLocation")?.value||"").trim()||"位置待補",stay:(document.getElementById("ocrStay")?.value||"").trim()||"停留時間待補",hours:(document.getElementById("ocrHours")?.value||"").trim(),rating:r.rating||"",searchQuery:r.searchQuery||name,localName:r.localName||"",ocr:false});
-  window.__ocrPlace=null;window.__addRouteIndex=null;closeDetail()
+  let wanted=(document.getElementById("ocrWanted")?.value||"").trim(),tripDay=day;
+  saveCustomFoodNear({name,category:document.getElementById("ocrCategory")?.value||r.category||"景點",intro:(document.getElementById("ocrIntro")?.value||"").trim(),recommend:(document.getElementById("ocrRecommend")?.value||"").trim(),location:(document.getElementById("ocrLocation")?.value||"").trim()||"位置待補",stay:(document.getElementById("ocrStay")?.value||"").trim()||"停留時間待補",hours:(document.getElementById("ocrHours")?.value||"").trim(),rating:r.rating||"",searchQuery:r.searchQuery||name,localName:r.localName||"",wantedItems:parsePlaceWanted(wanted),ocr:false});
+  window.__ocrPlace=null;window.__addRouteIndex=null;closeDetail();
+  if(wanted){try{await syncPlaceWanted(name,wanted,tripDay)}catch(e){console.warn(e);alert("地點已加入，但想買品項同步失敗，請到待買清單再確認一次。")}}
 }
 function showRecognitionResult(r,raw){
   let panel=document.querySelector("#detail .panel");if(!panel)return;
   let area=r.area||r.city||r.address||"位置待確認",hours=r.hours||"營業時間待確認",stay=r.stay||"10–30分鐘",intro=r.intro||"AI 已辨識地點，請確認名稱與資訊後再加入行程。",recommend=r.recommend||(r.rating?("Google Maps 評分 "+r.rating):r.category||"待確認");
-  let ri=Number.isInteger(window.__addRouteIndex)?window.__addRouteIndex:null,ev=activeEvents(DAYS[day]),target=ri!==null&&ev[ri]?ev[ri][1]:'DAY '+(day+1);panel.innerHTML='<div class="add-day">加入節點｜'+esc(target)+'</div><div class="recognition-ok">✓ 地點辨識完成</div><label class="small">確認名稱</label><input id="ocrName" class="add-input" value="'+attr(r.name)+'"><div class="status" style="margin:12px 0">'+esc(intro)+'</div><div class="ocr-result-grid"><div class="wide"><b>推薦</b><span>'+esc(recommend)+'</span></div><div class="wide"><b>位置／營業</b><span>'+esc(area)+'｜'+esc(hours)+'</span></div><div class="wide"><b>停留</b><span>'+esc(stay)+'</span></div><div class="wide"><b>路線</b><span>依目前位置確認距離與 到達時間；不為單一店家跨區</span></div></div><div class="status">請確認行程與內容；確認後會加入 '+esc(target)+'。</div><button class="btn primary add-save" onclick="confirmRecognizedPlace()">確認加入</button><button class="btn" onclick="closeDetail();openAddPlace()">重新辨識</button>';
+  let ri=Number.isInteger(window.__addRouteIndex)?window.__addRouteIndex:null,ev=activeEvents(DAYS[day]),target=ri!==null&&ev[ri]?ev[ri][1]:'DAY '+(day+1);panel.innerHTML='<div class="add-day">加入節點｜'+esc(target)+'</div><div class="recognition-ok">✓ 地點辨識完成</div><label class="small">確認名稱</label><input id="ocrName" class="add-input" value="'+attr(r.name)+'"><div class="status" style="margin:12px 0">'+esc(intro)+'</div><div class="ocr-result-grid"><div class="wide"><b>推薦</b><span>'+esc(recommend)+'</span></div><div class="wide"><b>位置／營業</b><span>'+esc(area)+'｜'+esc(hours)+'</span></div><div class="wide"><b>停留</b><span>'+esc(stay)+'</span></div><div class="wide"><b>路線</b><span>依目前位置確認距離與 到達時間；不為單一店家跨區</span></div></div><label class="small">🛍 想買的東西</label><textarea id="ocrWanted" class="add-textarea" rows="3" placeholder="例如：御守、七味粉、限定伴手禮；可用換行或逗號分開"></textarea><div class="status" style="margin:6px 0 12px">有填寫的品項會同步加入待買清單，並記錄來源景點。</div><div class="status">請確認行程與內容；確認後會加入 '+esc(target)+'。</div><button class="btn primary add-save" onclick="confirmRecognizedPlace()">確認加入</button><button class="btn" onclick="closeDetail();openAddPlace()">重新辨識</button>';
   r.intro=intro;r.recommend=recommend;r.area=area;r.stay=stay;window.__ocrPlace=r
 }
 function pickOcrCandidate(i){let r=window.__ocrPlace;if(!r||!r.candidates||!r.candidates[i])return;r.name=r.candidates[i].name;r.confidence=r.candidates[i].score;let el=document.getElementById("ocrName");if(el)el.value=r.name}
-function confirmRecognizedPlace(){
+async function confirmRecognizedPlace(){
   let r=window.__ocrPlace||{},name=(document.getElementById("ocrName")?.value||r.name||"").trim();if(!name){alert("請確認地點名稱");return}
-  saveCustomFoodNear({name,category:r.category||"景點",intro:r.intro||"AI 辨識加入。",recommend:r.recommend||(r.rating?("Google Maps 評分 "+r.rating):r.category||"待確認"),location:r.address||r.area||r.city||"位置待確認",stay:r.stay||"10–30分鐘",hours:r.hours||"",rating:r.rating||"",searchQuery:r.searchQuery||name,localName:r.localName||"",ocr:true});
-  window.__ocrPlace=null;window.__addRouteIndex=null;closeDetail()
+  let wanted=(document.getElementById("ocrWanted")?.value||"").trim(),tripDay=day;
+  saveCustomFoodNear({name,category:r.category||"景點",intro:r.intro||"AI 辨識加入。",recommend:r.recommend||(r.rating?("Google Maps 評分 "+r.rating):r.category||"待確認"),location:r.address||r.area||r.city||"位置待確認",stay:r.stay||"10–30分鐘",hours:r.hours||"",rating:r.rating||"",searchQuery:r.searchQuery||name,localName:r.localName||"",wantedItems:parsePlaceWanted(wanted),ocr:true});
+  window.__ocrPlace=null;window.__addRouteIndex=null;closeDetail();
+  if(wanted){try{await syncPlaceWanted(name,wanted,tripDay)}catch(e){console.warn(e);alert("地點已加入，但想買品項同步失敗，請到待買清單再確認一次。")}}
 }
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function attr(s){return esc(s).replace(/\n/g," ")}
