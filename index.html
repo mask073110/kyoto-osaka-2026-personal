@@ -283,7 +283,7 @@ const PHOTO_META={
 "勝尾寺｜達摩與紅葉":["09:30–11:00","24–50mm","達摩前景＋秋色環境","30–45分"],"箕面瀑布｜秋景":["11:30–13:00","24–50mm","人物小比例＋瀑布秋景","30分"],"新世界｜復古街拍":["09:30–11:30","24–50mm","通天閣、招牌、街頭紀實","30–45分"],"道頓堀｜藍調時刻":["15:30–17:00","45mm f/1.2","招牌亮起前後的環境人像","30–45分"],"心齋橋｜夜間人像":["17:00後","45mm f/1.2 + TTL","招牌散景；需要時低功率補光","30分"],"回程紀錄":["09:30–11:00","24–50mm","行李集合與機場紀錄","10–15分"]};
 
 const FOOD_DETAIL={
-"中トロと豚足 1階店":{intro:"JR天満駅すぐ、天神橋筋商店街エリアの居酒屋。DAY5の心斎橋・難波主線からは少し北へ外れるため、行きたい場合の追加候補として扱う。",recommend:"石窯PIZZAマルゲリータ／名物 豚足煮込み／脳天中トロ刺身",price:"近期公開資料：多くの料理が390円均一（税別）の案内あり；一部9円・曜日限定企画あり。最新価格は現地確認",hours:"営業時間は最新公式告知を出発前に確認｜無休との掲載あり",group:"8人｜公開資料では80席・予約可。8人は事前予約推奨",route:"DAY5 追加候補｜JR天満駅すぐ・大阪市北区天神橋4-4-21｜主線から北へ移動するため時間に余裕がある場合",img:"https://tblg.k-img.com/restaurant/images/Rvw/363619/640x640_rect_1b8742475d4456d7750d44f08e11d180.jpg"},
+"中トロと豚足 1階店":{intro:"JR天満駅すぐ、天神橋筋商店街エリアの居酒屋。DAY5の心斎橋・難波主線からは少し北へ外れるため、行きたい場合の追加候補として扱う。",recommend:"石窯PIZZAマルゲリータ／名物 豚足煮込み／脳天中トロ刺身",price:"近期公開資料：多くの料理が390円均一（税別）の案内あり；一部9円・曜日限定企画あり。最新価格は現地確認",hours:"営業時間は最新公式告知を出発前に確認｜無休との掲載あり",group:"8人｜公開資料では80席・予約可。8人は事前予約推奨",route:"DAY5 追加候補｜JR天満駅すぐ・大阪市北区天神橋4-4-21｜主線から北へ移動するため時間に余裕がある場合",img:"https://tblg.k-img.com/restaurant/images/Rvw/363409/640x640_rect_f6d737d2ee7c5105c0d45546696ad6d4.jpg"},
 
 "りくろーおじさん":{intro:"大阪經典現烤起司蛋糕，位在難波主線上，適合當作途中甜點或伴手禮。",recommend:"焼きたてチーズケーキ｜6号 ¥1,095",price:"官方現行價 ¥1,095｜冷暗所當日／冷藏3日",hours:"1F なんば本店 09:00–20:00；2F・3F 陸Café 11:00–17:30（LO 16:30）",group:"8人｜外帶最省時間；陸Café座位60分鐘制，可於來店日前2週預約",route:"難波・千日前主線｜順路",img:"https://www.rikuro.co.jp/wp-content/themes/rikuro/img/common/ogp.jpg"},
 "551 HORAI":{intro:"大阪代表性豬肉包品牌；DAY5 難波路線可直接外帶，不需要另外跨區。",recommend:"豚まん｜2個 ¥500／4個 ¥1,000／6個 ¥1,500",price:"豚まん｜官方現行價；店內飲食價格可能不同",hours:"本店売店 10:00–21:30；餐廳 11:00–21:30 LO",group:"8人｜建議外帶；餐廳多人用餐需看現場席位",route:"難波・戎橋筋｜順路",img:"https://www.551horai.co.jp/wp-content/themes/horai/assets/images/ogp.jpg"},
@@ -425,6 +425,26 @@ const GENERIC_PHOTO_KEYS=new Set(["OPTION｜寺町・新京極・四条河原町
 function photoProxy(u){return u||""}
 // Official Kyoto Station shop photo, bundled locally to avoid hotlink failures.
 POI_PHOTOS["麺匠たか松 京都駅ビル拉麺小路店"]="assets/restaurants/takamatsu-kyoto-station.png";
+/* Verified representative photos for DAY1–DAY6 food/nearby cards. Exact-place imagery only. */
+Object.assign(POI_PHOTOS,{
+"出町ろろろ":"https://tblg.k-img.com/restaurant/images/Rvw/4456/640x640_rect_4456573.jpg",
+"かつくら寺町店":"https://media.triple.guide/triple-cms/c_limit%2Cf_auto%2Ch_1024%2Cw_1024/53b44283-8842-4719-9df6-2fafb95094fd.jpeg",
+"祢ざめ家":"https://ximg.retty.me/crop/s400x400/q80/das/-/retty/img_repo/2l/01/38364507.jpg",
+"% ARABICA Higashiyama":"https://cdn.prod.rexby.com/image/05bf8860141349948db1ed36187d9c06?format=webp&height=1350&width=1080",
+"本家西尾八橋 清水店":"https://cdn.4travel.jp/img/thumbnails/imk/tips_pict/17/71/53/650x450_17715316.jpg?updated_at=1608983415",
+"天ぷら圓堂 八坂本店":"https://stat.ameba.jp/user_images/20240429/05/madamhitomi722/03/57/j/o1080081015431818545.jpg",
+"Kichi Kichi Omurice キチ・キチ":"https://sp-ao.shortpixel.ai/client/q_glossy%2Cret_img%2Cw_670%2Ch_670/https%3A/img01.jalannews.jp/img/2023/04/20230418_kyoto-omuraisu_18.jpg",
+"和牛料亭 bungo 祇園":"https://d347zz7hcyx90o.cloudfront.net/tenpodesign-com/675x450/0b3d84d2b6e112029cba479fb4ee73ea/upload_picture/S1679743700595_1.jpg",
+"橋本亭・柚子咖啡":"https://www.alpha-ao.co.jp/img/img-works_hashimototei/img_06.jpg",
+"串かつてんぐ":"https://stat.ameba.jp/user_images/20240407/06/shinsekaizyoho/fb/7d/j/o1080144015422471849.jpg",
+"551蓬莱 なんばウォーク店":"https://ximg.retty.me/crop/s600x600/q80/das/-/retty/img_repo/2l/01/35906850.jpg",
+"新世界 かんかん｜章魚燒":"https://japanshopping.org/files/shopping_article_contents/-_2023-02-18-091437.JPG",
+"鶏笑 新世界店｜唐揚炸雞":"https://stat.ameba.jp/user_images/20240703/20/shinsekai-information/5c/d4/j/o1512201615458964694.jpg",
+"甘々堂 新世界ジャンジャン横丁｜超長串卡斯特拉":"https://tblg.k-img.com/restaurant/images/Rvw/209013/640x640_rect_00d3d4d4663a5d786569cbb2ce8496d2.jpg",
+"新世界おみやげもん横丁｜比利肯しあわせ焼":"https://tblg.k-img.com/restaurant/images/Rvw/265976/640x640_rect_7fb530a2069c04b22ca8821abb712f70.jpg",
+"おにぎりごりちゃん 新世界店｜鮭魚籽飯糰":"https://tblg.k-img.com/restaurant/images/Rvw/318371/640x640_rect_33a2d1ca3304e168322c84d69c996143.jpg",
+"ぱん士郎 なんば道頓堀店｜熊貓白可頌":"https://images.keizai.biz/namba_keizai/headline/1640569792_photo.jpg"
+});
 function stationPhoto(x){let u=x.photo||POI_PHOTOS[x.name]||"",generic=GENERIC_PHOTO_KEYS.has(x.name);if(!u){let msg=x.votes!=null?"等待取得店家實際照片":"照片待確認｜不使用非本店／非本景點圖片";return '<div class="nearphoto-wrap photo-unavailable no-photo"><div class="no-photo-text">'+msg+'</div></div>'}let remote=/^https?:/i.test(u),src=u;return '<div class="nearphoto-wrap'+(generic?' representative-photo':'')+'"><img class="nearpage-photo" src="'+esc(src)+'" data-original="'+esc(u)+'" data-stage="'+(remote?'direct':'local')+'" data-place="'+esc(x.name)+'" alt="'+esc(x.name)+'" loading="lazy" decoding="async" onerror="stationPhotoFallback(this)">'+(generic?'<span class="photo-badge">區域代表照</span>':'')+'</div>'}
 function stationPhotoFallback(img){let w=img.closest(".nearphoto-wrap");if(!w)return;let place=img.dataset.place||"",original=img.dataset.original||"",generic=GENERIC_PHOTO_KEYS.has(place);if(original&&/^https?:/i.test(original)&&img.dataset.stage!=="proxy"){img.dataset.stage="proxy";img.src="https://images.weserv.nl/?url="+encodeURIComponent(original)+"&w=900&q=76&output=jpg";return}w.classList.add("photo-unavailable","no-photo");w.innerHTML='<div class="no-photo-text">照片待補｜店家資料可正常使用</div>'}
 function stationKey(name){let keys=Object.keys((STATION_NEARBY[day]||{}));return keys.find(k=>name.includes(k)||k.includes(name))||name}
