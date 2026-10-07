@@ -554,7 +554,8 @@ const PLACE_NAME_ALIASES={"nittodo&kyotocafe":"日東堂","nittodokyotocafe":"�
 function canonicalPlaceName(s){let k=normalizedPlaceName(s);return normalizedPlaceName(PLACE_NAME_ALIASES[k]||k)}
 const VERIFIED_PLACE_COORDS=[
 {keys:["五香湯","五香湯(goko-yu)","goko-yu","gokoyu","五香湯京都"],name:"五香湯 (Goko-yu)",lat:34.996079,lon:135.748921,city:"京都市",state:"京都府",source:"verified place"},
-{keys:["空庭溫泉","空庭温泉","solaniwaonsen","solaniwaonsenosakabaytower"],name:"空庭温泉 OSAKA BAY TOWER",lat:34.669003,lon:135.460876,city:"大阪市",state:"大阪府",source:"verified place"}
+{keys:["空庭溫泉","空庭温泉","solaniwaonsen","solaniwaonsenosakabaytower"],name:"空庭温泉 OSAKA BAY TOWER",lat:34.669003,lon:135.460876,city:"大阪市",state:"大阪府",source:"verified place"},
+{keys:["御宿野乃難波","御宿野乃なんば","御宿野乃namba","onyadonononamba","天然温泉花風の湯御宿野乃なんば"],name:"天然温泉 花風の湯 御宿 野乃なんば",lat:34.6679,lon:135.5063,city:"大阪市中央区",state:"大阪府",address:"〒542-0073 大阪府大阪市中央区日本橋1-4-18",phone:"06-6211-5489",hours:"大浴場 15:00～翌10:00（サウナ 01:00～05:00 休止）",closed:"待補",recommend:"2F 男女別天然温泉大浴場「花風の湯」",price:"待補",note:"官方資料已核對；是否可非住宿單獨入浴請另行確認",source:"御宿 野乃なんば 官方網站"}
 ];
 function verifiedPlace(name){let k=normalizedPlaceName(name.replace(/\s+日本\s*$/,""));for(let p of VERIFIED_PLACE_COORDS)if(p.keys.some(x=>normalizedPlaceName(x)===k))return {...p}}
 function findExistingPlace(name){let key=canonicalPlaceName(name);for(let d=0;d<DAYS.length;d++){let built=[...(DAYS[d].food||[]),...(DAYS[d].near||[])];let custom=[];try{custom=JSON.parse(localStorage.getItem("customFoodNearDay"+d)||"[]")}catch(e){}for(let x of [...built,...custom.map(v=>v.name)]){let k=canonicalPlaceName(x);if(k===key)return {day:d,name:x}}}return null}
