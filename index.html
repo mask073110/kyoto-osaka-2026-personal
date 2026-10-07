@@ -138,6 +138,12 @@ body{font-size:16px}.top{font-size:13px}.eyebrow{font-size:12px}.hero p{font-siz
 .detailpage>.nearphoto-wrap,
 .nearphoto-wrap.no-photo,.nearphoto-wrap.photo-unavailable,.no-photo,.no-photo-text,
 .photo-fallback-label,.photo-badge{display:none!important;height:0!important;min-height:0!important;max-height:0!important;margin:0!important;padding:0!important;border:0!important;background:none!important;overflow:hidden!important}
+</style><style id="foodnear-photo-test-override">
+/* Re-enable guarded imagery for the 2026-10-07 image rollout test. This intentionally overrides the old no-photo mode. */
+.foodcard>.nearphoto-wrap{display:block!important;height:auto!important;min-height:120px!important;max-height:none!important;margin:0 0 9px!important;padding:0!important;border:0!important;background:#eee7dc!important;overflow:hidden!important}
+.foodcard>.nearphoto-wrap>.nearpage-photo{display:block!important;width:100%!important;height:170px!important;min-height:170px!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;object-fit:cover!important;background:#eee7dc!important}
+.foodcard>.nearphoto-wrap.no-photo,.foodcard>.nearphoto-wrap.photo-unavailable{display:block!important;height:120px!important;min-height:120px!important;max-height:120px!important;background:#eee7dc!important}
+.foodcard>.nearphoto-wrap.no-photo>.no-photo-text,.foodcard>.nearphoto-wrap.photo-unavailable>.no-photo-text{display:flex!important;height:120px!important;min-height:120px!important;max-height:120px!important;align-items:center!important;justify-content:center!important;padding:12px!important;color:#7d7064!important;font-size:12px!important;text-align:center!important;background:#eee7dc!important}
 </style><style id="foodnear-delete-style">
 .foodcard .poi-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .foodcard .poi-head h3{flex:1 1 180px;min-width:0}
