@@ -144,6 +144,9 @@ body{font-size:16px}.top{font-size:13px}.eyebrow{font-size:12px}.hero p{font-siz
 .foodcard>.nearphoto-wrap>.nearpage-photo{display:block!important;width:100%!important;height:170px!important;min-height:170px!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;object-fit:cover!important;background:#eee7dc!important}
 .foodcard>.nearphoto-wrap.no-photo,.foodcard>.nearphoto-wrap.photo-unavailable{display:block!important;height:120px!important;min-height:120px!important;max-height:120px!important;background:#eee7dc!important}
 .foodcard>.nearphoto-wrap.no-photo>.no-photo-text,.foodcard>.nearphoto-wrap.photo-unavailable>.no-photo-text{display:flex!important;height:120px!important;min-height:120px!important;max-height:120px!important;align-items:center!important;justify-content:center!important;padding:12px!important;color:#7d7064!important;font-size:12px!important;text-align:center!important;background:#eee7dc!important}
+</style><style id="nearby-photo-rollout-override">
+.foodcard>.nearphoto-wrap{display:block!important;height:auto!important;min-height:120px!important;max-height:none!important;margin:0 0 9px!important;padding:0!important;border:0!important;background:#eee7dc!important;overflow:hidden!important}
+.foodcard>.nearphoto-wrap>.nearpage-photo{display:block!important;width:100%!important;height:170px!important;min-height:170px!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;object-fit:cover!important;background:#eee7dc!important}
 </style><style id="foodnear-delete-style">
 .foodcard .poi-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .foodcard .poi-head h3{flex:1 1 180px;min-width:0}
@@ -425,6 +428,19 @@ const GENERIC_PHOTO_KEYS=new Set(["OPTION｜寺町・新京極・四条河原町
 function photoProxy(u){return u||""}
 // Official Kyoto Station shop photo, bundled locally to avoid hotlink failures.
 POI_PHOTOS["麺匠たか松 京都駅ビル拉麺小路店"]="assets/restaurants/takamatsu-kyoto-station.png";
+/* Verified representative photos for major attractions and nearby shops. */
+Object.assign(POI_PHOTOS,{
+"京都塔":"https://www.kyoto-tower.jp/img/ogp.jpg",
+"清水寺":"https://www.kiyomizudera.or.jp/assets/img/about/img_stage_01.jpg",
+"金剛寺（八坂庚申堂）":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Yasaka_Koshindo_Kyoto.jpg/1024px-Yasaka_Koshindo_Kyoto.jpg",
+"安井金比羅宮":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Yasui_Konpiragu_Kyoto.jpg/1024px-Yasui_Konpiragu_Kyoto.jpg",
+"心齋橋筋商店街":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Shinsaibashi-suji_Shopping_Street.jpg/1280px-Shinsaibashi-suji_Shopping_Street.jpg",
+"心斎橋PARCO":"https://shinsaibashi.parco.jp/web/images/og.jpg",
+"大丸心斎橋店":"https://www.daimaru.co.jp/shinsaibashi/assets/images/ogp.jpg",
+"美國村":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Amerikamura_Osaka.jpg/1280px-Amerikamura_Osaka.jpg",
+"なんばパークス":"https://nambaparks.com/assets/images/ogp.jpg",
+"KIX DUTY FREE":"https://www.kixdutyfree.jp/img/ogp.jpg"
+});
 /* Verified representative photos for DAY1–DAY6 food/nearby cards. Exact-place imagery only. */
 Object.assign(POI_PHOTOS,{
 "出町ろろろ":"https://tblg.k-img.com/restaurant/images/Rvw/4456/640x640_rect_4456573.jpg",
